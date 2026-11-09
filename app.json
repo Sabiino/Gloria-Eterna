@@ -1,9 +1,11 @@
 {
   "expo": {
-    "name": "desbrava",
-    "slug": "desbrava",
+    "name": "Desbrava World",
+    "slug": "desbrava-world",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
+    "scheme": "desbravaworld",
+    "plugins": ["expo-router"],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
