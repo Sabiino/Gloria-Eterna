@@ -1,37 +1,30 @@
-import { GameWorld } from '@/components/game/game-world';
-import { GameButton } from '@/components/ui/game-ui';
-import { useAuth } from '@/hooks/use-auth';
-import { router } from 'expo-router';
+import { GameHeader } from '../../components/game/home/GameHeader';
+import { GameHomeBackground } from '@/components/game/home/GameHomeBackground';
+import { GameBottomToolbar } from '@/components/game/home/GameBottomToolbar';
+import { StyleSheet, View } from 'react-native';
+import { HomeCampScene } from '@/components/game/home/tent/HomeCampScene';
+import { TentDetailsPanel } from '@/components/game/home/tent/TentDetailsPanel';
+import { usePlayerHeader } from '@/hooks/use-player-header';
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors } from '@/theme/tokens';
+import { CharacterDetailsPanel } from '@/components/game/home/CharacterDetailsPanel';
+import { getCampAvatar } from '@/constants/avatarCatalog';
 
 export default function Dashboard() {
-  const { player } = useAuth();
-  const [placing, setPlacing] = useState(false);
-
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [characterOpen, setCharacterOpen] = useState(false);
+  const { player, tentLevel, league } = usePlayerHeader();
+  const avatar = getCampAvatar(player?.avatarId);
   return (
-    <View style={styles.page}>
-      <GameWorld placementEnabled={placing} onPlaced={() => setPlacing(false)} />
-      <View pointerEvents="none" style={styles.header}>
-        <View><Text style={styles.name}>{player?.nickname ?? 'Aventureiro'}</Text><Text style={styles.level}>Aspirante · Nv. 1</Text></View>
-        <Text style={styles.coins}>◉ 100</Text>
+    <GameHomeBackground>
+      <View style={styles.page}>
+        <GameHeader />
+        <HomeCampScene avatarId={player?.avatarId} onTentPress={() => setDetailsOpen(true)} onCharacterPress={() => setCharacterOpen(true)} />
+        <GameBottomToolbar />
+        <TentDetailsPanel visible={detailsOpen} onClose={() => setDetailsOpen(false)} tentLevel={tentLevel} league={league} campName={player?.campName} />
+        <CharacterDetailsPanel visible={characterOpen} onClose={() => setCharacterOpen(false)} name={player?.nickname || 'Aventureiro'} league={league} avatar={avatar} />
       </View>
-      <View style={styles.actions}>
-        {placing ? <GameButton title="CANCELAR POSICIONAMENTO" variant="outline" onPress={() => setPlacing(false)} /> : <GameButton title="ESCOLHER MEU TERRENO" onPress={() => setPlacing(true)} />}
-        <Pressable style={styles.profile} onPress={() => router.push('/(game)/profile')}><Text style={styles.profileText}>Perfil</Text></Pressable>
-      </View>
-    </View>
+    </GameHomeBackground>
   );
 }
 
-const styles = StyleSheet.create({
-  page: { flex: 1, backgroundColor: colors.ink },
-  header: { position: 'absolute', top: 52, left: 16, right: 16, zIndex: 10, padding: 12, borderRadius: 16, borderWidth: 1, borderColor: 'rgba(214,168,79,.42)', backgroundColor: 'rgba(16,28,24,.88)', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  name: { fontSize: 18, fontWeight: '900', color: colors.sand },
-  level: { color: colors.muted, fontSize: 12 },
-  coins: { color: colors.gold, fontWeight: '900' },
-  actions: { position: 'absolute', left: 16, bottom: 22, zIndex: 20, maxWidth: '92%', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 10 },
-  profile: { minHeight: 52, paddingHorizontal: 16, justifyContent: 'center', alignItems: 'center', borderRadius: 14, borderWidth: 1, borderColor: colors.gold, backgroundColor: 'rgba(23,61,50,.96)' },
-  profileText: { color: colors.sand, fontWeight: '800' },
-});
+const styles = StyleSheet.create({ page: { flex: 1, width: '100%', paddingTop: 52, paddingHorizontal: 14, paddingBottom: 24 } });

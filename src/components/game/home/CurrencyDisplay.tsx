@@ -1,0 +1,7 @@
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { gameColors } from '@/theme/gameColors';
+export function CurrencyDisplay({ kind, value, onAdd }: { kind: 'coins' | 'gems'; value: number; onAdd: () => void }) {
+  const gem = kind === 'gems';
+  return <View style={styles.shell}><Text style={[styles.icon, gem && styles.gem]}>{gem ? '◆' : '●'}</Text><Text numberOfLines={1} style={styles.value}>{value.toLocaleString('pt-BR')}</Text><Pressable accessibilityLabel={`Adicionar ${gem ? 'gemas' : 'moedas'}`} onPress={onAdd} style={({ pressed }) => [styles.add, pressed && styles.pressed]}><Text style={styles.plus}>+</Text></Pressable></View>;
+}
+const styles = StyleSheet.create({ shell: { height: 38, minWidth: 110, paddingLeft: 8, paddingRight: 4, borderRadius: 12, borderWidth: 1, borderColor: 'rgba(244,188,63,.72)', backgroundColor: 'rgba(3,35,39,.91)', flexDirection: 'row', alignItems: 'center', gap: 6, shadowColor: '#000', shadowOpacity: .25, shadowRadius: 4, elevation: 3 }, icon: { color: gameColors.coin, fontSize: 25, textShadowColor: gameColors.goldDeep, textShadowRadius: 5 }, gem: { color: gameColors.gem }, value: { minWidth: 23, flex: 1, color: gameColors.white, fontSize: 16, fontWeight: '900', textAlign: 'right' }, add: { width: 28, height: 28, borderRadius: 8, alignItems: 'center', justifyContent: 'center', backgroundColor: '#42A946', borderWidth: 1, borderColor: '#A9F48A' }, pressed: { opacity: .76, transform: [{ scale: .94 }] }, plus: { color: gameColors.white, fontSize: 23, lineHeight: 26, fontWeight: '900' } });

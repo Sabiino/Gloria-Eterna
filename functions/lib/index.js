@@ -38,7 +38,10 @@ const admin = __importStar(require("firebase-admin"));
 const https_1 = require("firebase-functions/v2/https");
 admin.initializeApp();
 /** Server-owned idempotent player initialization. The app should call this after profile validation. */
-const localOrigins = ['http://localhost:8082'];
+// Expo may select a different development port when the default is occupied.
+// Keep this permissive only for local HTTP development; deployed sites must be
+// added explicitly instead of allowing arbitrary external origins.
+const localOrigins = [/^http:\/\/localhost:\d+$/];
 exports.initializePlayer = (0, https_1.onCall)({ cors: localOrigins }, async (request) => {
     if (!request.auth)
         throw new https_1.HttpsError('unauthenticated', 'Autenticação necessária.');

@@ -1,4 +1,4 @@
-# Desbrava World
+# Gloria Eterna
 
 Fundação multiplataforma (Expo Router, TypeScript estrito, Firebase modular) para o jogo de aventura e acampamento.
 

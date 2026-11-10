@@ -1,0 +1,15 @@
+export const gameColors = {
+  midnight: '#071F22',
+  teal: '#0B3F43',
+  forest: '#0B392D',
+  pine: '#15533E',
+  gold: '#F4BC3F',
+  goldDeep: '#A8610B',
+  parchment: '#FFF3D5',
+  cream: '#FFF8E7',
+  white: '#FFFFFF',
+  muted: '#C6D6CE',
+  danger: '#E95045',
+  coin: '#FFD45A',
+  gem: '#55DE7B',
+} as const;
