@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Image, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { tentLevelOnePreview } from '@/config/tentLevelOnePreview';
 import { gameColors } from '@/theme/gameColors';
-const tent = require('../../../../assets/game/tents/tent-level-01.png');
+const tent = require('../../../../assets/game/tents/tent-level-01-v2.png');
 type Tab = 'missions' | 'upgrade' | 'unlocks';
 const tabs: { key: Tab; label: string; icon: string }[] = [{ key: 'missions', label: 'MISSÕES', icon: '✦' }, { key: 'upgrade', label: 'EVOLUÇÃO', icon: '↑' }, { key: 'unlocks', label: 'DESBLOQUEIOS', icon: '🔒' }];
 

@@ -1,12 +1,17 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable } from 'react-native';
+import Svg, { Image, Text } from 'react-native-svg';
 import type { CampAvatar } from '@/constants/avatarCatalog';
-import { gameColors } from '@/theme/gameColors';
 
-export function CampCharacter({ avatar, onPress }: { avatar: CampAvatar; onPress: () => void }) {
-  return <Pressable accessibilityRole="button" accessibilityLabel={`Abrir detalhes de ${avatar.name}`} onPress={onPress} style={({ pressed }) => [styles.touch, pressed && styles.pressed]}>
-    <View style={styles.contactShadow} />
-    {avatar.image ? <Image source={avatar.image} resizeMode="contain" style={styles.image} /> : <View style={styles.placeholder}><View style={styles.head}><Text style={styles.initial}>{avatar.genderVariant === 'female' ? 'F' : 'M'}</Text></View><View style={styles.body}><Text style={styles.pending}>ARTE{`\n`}PENDENTE</Text></View></View>}
-    <Text style={styles.name}>{avatar.assetStatus === 'pending' ? `${avatar.name} · PREVIEW` : avatar.name}</Text>
+/** Artwork and lettering share the original 1086 × 1448 coordinate system. */
+export function CampCharacter({ avatar, nickname, onPress }: { avatar: CampAvatar; nickname: string; onPress: () => void }) {
+  const white = avatar.id === 'campista-2';
+  const label = nickname.trim();
+  const x = white ? 520 : 512;
+  const y = white ? 475 : 470;
+  return <Pressable accessibilityRole="button" accessibilityLabel={`Personagem de ${nickname}`} onPress={onPress} style={{ width: '100%', height: '100%' }}>
+    <Svg width="100%" height="100%" viewBox="0 0 1086 1448">
+      {avatar.image ? <Image href={avatar.image} width={1086} height={1448} /> : null}
+      <Text x={x} y={y + 6} transform={`rotate(-4 ${x} ${y})`} fill={white ? '#182B54' : '#17392C'} fontWeight="bold" fontFamily="Arial" fontSize={Math.min(18, 116 / Math.max(1, Array.from(label).length))} textAnchor="middle">{label}</Text>
+    </Svg>
   </Pressable>;
 }
-const styles = StyleSheet.create({ touch: { width: '100%', height: '100%', alignItems: 'center', justifyContent: 'flex-end' }, pressed: { opacity: .82, transform: [{ scale: .97 }] }, contactShadow: { position: 'absolute', bottom: 2, width: '72%', height: 13, borderRadius: 99, backgroundColor: 'rgba(1,27,19,.45)' }, image: { width: '100%', height: '100%' }, placeholder: { width: '74%', height: '88%', alignItems: 'center', justifyContent: 'flex-end' }, head: { width: 50, height: 50, borderRadius: 25, backgroundColor: '#C99062', borderWidth: 3, borderColor: '#58371F', alignItems: 'center', justifyContent: 'center' }, initial: { color: '#FFF5DF', fontSize: 22, fontWeight: '900' }, body: { width: '76%', height: '62%', marginTop: -4, borderTopLeftRadius: 22, borderTopRightRadius: 22, borderWidth: 3, borderColor: '#69562B', backgroundColor: '#BFA86B', alignItems: 'center', justifyContent: 'center' }, pending: { color: '#173B34', fontSize: 9, fontWeight: '900', textAlign: 'center', lineHeight: 12 }, name: { position: 'absolute', bottom: -17, color: gameColors.cream, fontSize: 9, fontWeight: '900', backgroundColor: 'rgba(3,40,35,.78)', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 } });

@@ -1,0 +1,15 @@
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { InventoryIcon } from '@/assets/game/inventory/InventoryAssets';
+import { inventoryCatalog, type InventoryCategory } from '@/config/inventory-catalog';
+import type { InventorySlot } from '@/types/game';
+import { gameColors } from '@/theme/gameColors';
+
+export function InventoryGrid({ slots, capacity, selectedSlotId, filter, onSelect }: { slots: InventorySlot[]; capacity: number; selectedSlotId?: string; filter: 'all' | InventoryCategory; onSelect: (slot: InventorySlot) => void }) {
+  const { width } = useWindowDimensions(); const columns = width >= 860 ? 6 : 4;
+  const visible = filter === 'all' ? slots : slots.filter(slot => inventoryCatalog[slot.itemId as keyof typeof inventoryCatalog]?.category === filter);
+  const emptyCount = filter === 'all' ? Math.max(0, capacity - slots.length) : 0;
+  const entries: (InventorySlot | null)[] = [...visible];
+  for (let index = 0; index < emptyCount; index += 1) entries.push(null);
+  return <View style={styles.wrap}>{entries.map((slot,index)=>slot ? <Pressable key={slot.slotId} accessibilityRole="button" accessibilityLabel={inventoryCatalog[slot.itemId as keyof typeof inventoryCatalog]?.name ?? 'Item'} onPress={()=>onSelect(slot)} style={({ pressed })=>[styles.slot,{width:`${100/columns}%`},selectedSlotId===slot.slotId&&styles.selected,pressed&&styles.pressed]}><InventoryIcon kind={inventoryCatalog[slot.itemId as keyof typeof inventoryCatalog]?.image as never} size={width>=860?52:43}/><Text numberOfLines={1} style={styles.name}>{inventoryCatalog[slot.itemId as keyof typeof inventoryCatalog]?.name}</Text><View style={styles.amountChip}><Text style={styles.amount}>×{slot.quantity}</Text></View></Pressable> : <View key={`empty-${index}`} style={[styles.slot,styles.empty,{width:`${100/columns}%`}]}><Text style={styles.emptyMark}>+</Text></View>)}</View>;
+}
+const styles=StyleSheet.create({wrap:{flexDirection:'row',flexWrap:'wrap',borderRadius:20,borderWidth:1.5,borderColor:'rgba(229,179,78,.60)',backgroundColor:'rgba(1,28,25,.79)'},slot:{aspectRatio:.94,position:'relative',alignItems:'center',justifyContent:'center',borderRadius:14,borderWidth:1.5,borderColor:'rgba(229,179,78,.45)',backgroundColor:'rgba(7,48,41,.92)',paddingTop:6},empty:{borderStyle:'dashed',borderColor:'rgba(255,216,117,.30)',backgroundColor:'rgba(0,31,24,.36)'},selected:{zIndex:2,borderColor:'#FFD875',backgroundColor:'rgba(25,87,54,.98)',boxShadow:'0 0 13px rgba(255,216,117,.58)'},pressed:{opacity:.84,transform:[{scale:.97}]},name:{width:'88%',color:gameColors.cream,fontWeight:'900',fontSize:10,lineHeight:12,textAlign:'center',marginTop:1},amountChip:{minWidth:31,paddingHorizontal:5,height:19,borderRadius:10,alignItems:'center',justifyContent:'center',position:'absolute',right:4,bottom:4,backgroundColor:'rgba(2,34,27,.90)',borderWidth:1,borderColor:'rgba(255,216,117,.45)'},amount:{color:gameColors.parchment,fontWeight:'900',fontSize:10,textShadowColor:'#001B1A',textShadowRadius:3},emptyMark:{color:'rgba(255,240,199,.48)',fontSize:34,fontWeight:'300'}});

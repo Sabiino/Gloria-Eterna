@@ -9,7 +9,7 @@ export function GameBottomToolbar() {
   const tools: Tool[] = [
     { label: 'Acampamento', icon: '⛺', action: () => router.replace('/(game)/dashboard') },
     { label: 'Atividades', icon: '🗺', action: () => comingSoon('Atividades') },
-    { label: 'Mochila', icon: '🎒', action: () => comingSoon('Mochila') },
+    { label: 'Mochila', icon: '▣', action: () => router.push('/(game)/backpack') },
     { label: 'Liga', icon: '⌃', action: () => comingSoon('Liga') },
     { label: 'Clube', icon: '♟', action: () => comingSoon('Clube') },
     { label: 'Perfil', icon: '●', action: () => router.push('/(game)/profile') },
