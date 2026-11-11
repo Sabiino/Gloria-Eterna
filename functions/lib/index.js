@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveAvatarPosition = exports.claimCampPlot = exports.submitAdventurerIntroductionQuiz = exports.completeBackpackUpgrade = exports.startBackpackUpgrade = exports.initializeInventory = exports.initializePlayer = void 0;
+exports.saveAvatarPosition = exports.claimCampPlot = exports.submitAdventurerIntroductionQuiz = exports.completeBackpackUpgrade = exports.startBackpackUpgrade = exports.initializeInventory = exports.initializePlayer = exports.grantConfiguredAdmin = void 0;
 exports.grantItems = grantItems;
 exports.claimPendingRewards = claimPendingRewards;
 exports.consumeItems = consumeItems;
@@ -42,6 +42,14 @@ const https_1 = require("firebase-functions/v2/https");
 admin.initializeApp();
 const localOrigins = [/^http:\/\/localhost:\d+$/];
 const db = admin.firestore();
+// One-off operational endpoint. It is deliberately restricted to the UID supplied
+// by the project owner and is removed immediately after the claim is provisioned.
+exports.grantConfiguredAdmin = (0, https_1.onRequest)(async (_request, response) => {
+    const uid = 'wwv5MkWYCgTjYFKv1UkzX8C8yma2';
+    const user = await admin.auth().getUser(uid);
+    await admin.auth().setCustomUserClaims(uid, { ...(user.customClaims ?? {}), admin: true });
+    response.status(200).json({ ok: true, uid, email: user.email ?? null, admin: true });
+});
 const initialSlots = [
     { slotId: 'slot-01', itemId: 'wood', quantity: 40 }, { slotId: 'slot-02', itemId: 'stone', quantity: 15 }, { slotId: 'slot-03', itemId: 'natural_fiber', quantity: 10 },
     { slotId: 'slot-04', itemId: 'canteen', quantity: 1 }, { slotId: 'slot-05', itemId: 'rope', quantity: 1 }, { slotId: 'slot-06', itemId: 'flashlight', quantity: 1 }, { slotId: 'slot-07', itemId: 'basic_tools', quantity: 1 },

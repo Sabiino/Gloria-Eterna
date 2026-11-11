@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    // Temporary test-editor access. Replace with a custom admin claim before launch.
+    function uniformEditor() { return signedIn() && request.auth.uid == 'wwv5MkWYCgTjYFKv1UkzX8C8yma2'; }
+    match /uniforms/emblems/{imageId} {
+      allow read: if signedIn();
+      allow create, update: if uniformEditor()
+        && request.resource.size < 8 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp)');
+      allow delete: if uniformEditor();
+    }
+  }
+}

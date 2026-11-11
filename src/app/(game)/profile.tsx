@@ -15,6 +15,7 @@ export default function Profile() {
   const [avatar, setAvatar] = useState<AvatarId>(player?.avatarId ?? 'campista-1');
   const [message, setMessage] = useState('');
   const [saving, setSaving] = useState(false);
+  const [endingSession, setEndingSession] = useState(false);
 
   const save = async () => {
     if (!db || !user) return;
@@ -28,6 +29,19 @@ export default function Profile() {
       setMessage('Não foi possível salvar agora. Tente novamente.');
     } finally {
       setSaving(false);
+    }
+  };
+
+  const endSession = async () => {
+    try {
+      setEndingSession(true);
+      setMessage('');
+      await logout();
+      router.replace('/(auth)/login');
+    } catch {
+      setMessage('Não foi possível encerrar a sessão agora. Tente novamente.');
+    } finally {
+      setEndingSession(false);
     }
   };
 
@@ -58,7 +72,8 @@ export default function Profile() {
 
     {message ? <Notice>{message}</Notice> : null}
     <GameButton title="SALVAR ALTERAÇÕES" onPress={save} loading={saving} />
-    <GameButton title="ENCERRAR SESSÃO" variant="outline" onPress={logout} />
+    <GameButton title="GERENCIADOR DE UNIFORME" onPress={() => router.push('/(game)/admin-uniform')} />
+    <GameButton title="ENCERRAR SESSÃO" variant="outline" onPress={endSession} loading={endingSession} />
   </ScrollView>;
 }
 

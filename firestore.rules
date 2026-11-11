@@ -3,6 +3,8 @@ service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() { return request.auth != null; }
     function owner(uid) { return signedIn() && request.auth.uid == uid; }
+    // Temporary test-editor access. Replace with a custom admin claim before launch.
+    function uniformEditor() { return signedIn() && request.auth.uid == 'wwv5MkWYCgTjYFKv1UkzX8C8yma2'; }
     match /players/{uid} {
       allow read: if signedIn();
       allow create: if false;
@@ -16,5 +18,17 @@ service cloud.firestore {
     match /gameStates/{uid} { allow read: if owner(uid); allow write: if false; }
     match /usernames/{nickname} { allow read, write: if false; }
     match /worldSectors/{sectorId} { allow read: if signedIn(); allow write: if false; }
+    match /uniforms/miguel/library/{imageId} {
+      allow read: if signedIn();
+      allow write: if uniformEditor();
+    }
+    match /uniforms/miguel/layers/{layerId} {
+      allow read: if signedIn();
+      allow write: if uniformEditor();
+    }
+    match /uniforms/miguel/categories/{categoryId} {
+      allow read: if signedIn();
+      allow write: if uniformEditor();
+    }
   }
 }

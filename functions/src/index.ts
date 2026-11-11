@@ -4,6 +4,7 @@ import { HttpsError, onCall } from 'firebase-functions/v2/https';
 admin.initializeApp();
 const localOrigins = [/^http:\/\/localhost:\d+$/];
 const db = admin.firestore();
+
 const initialSlots = [
   { slotId: 'slot-01', itemId: 'wood', quantity: 40 }, { slotId: 'slot-02', itemId: 'stone', quantity: 15 }, { slotId: 'slot-03', itemId: 'natural_fiber', quantity: 10 },
   { slotId: 'slot-04', itemId: 'canteen', quantity: 1 }, { slotId: 'slot-05', itemId: 'rope', quantity: 1 }, { slotId: 'slot-06', itemId: 'flashlight', quantity: 1 }, { slotId: 'slot-07', itemId: 'basic_tools', quantity: 1 },
