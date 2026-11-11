@@ -93,6 +93,19 @@ export class UniformLayerRenderer {
       texture = new THREE.Texture(bitmap);
       texture.flipY = false;
       texture.addEventListener('dispose', () => bitmap.close());
+    } else if (typeof document !== 'undefined') {
+      // Safari/iOS may not expose createImageBitmap. Decode with a CORS-enabled
+      // HTMLImageElement, which is supported by the WebGPU texture source adapter.
+      const image = new Image();
+      image.crossOrigin = 'anonymous';
+      image.decoding = 'async';
+      await new Promise<void>((resolve, reject) => {
+        image.onload = () => resolve();
+        image.onerror = () => reject(new Error('O navegador não conseguiu carregar a imagem do Storage.'));
+        image.src = url;
+      });
+      if (this.disposed) throw new Error('Visualizador encerrado.');
+      texture = new THREE.Texture(image);
     } else {
       texture = await new THREE.TextureLoader().loadAsync(url);
     }

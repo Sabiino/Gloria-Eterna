@@ -10,7 +10,7 @@ export function GameBottomToolbar() {
     { label: 'Acampamento', icon: '⛺', action: () => router.replace('/(game)/dashboard') },
     { label: 'Atividades', icon: '🗺', action: () => comingSoon('Atividades') },
     { label: 'Mochila', icon: '▣', action: () => router.push('/(game)/backpack') },
-    { label: 'Liga', icon: '⌃', action: () => comingSoon('Liga') },
+    { label: 'Carreira', icon: '⌃', action: () => router.push('/(game)/career') },
     { label: 'Clube', icon: '♟', action: () => comingSoon('Clube') },
     { label: 'Perfil', icon: '●', action: () => router.push('/(game)/profile') },
   ];
